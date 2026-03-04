@@ -23,7 +23,7 @@ const THEMES = [
   { bg: '#1E1E1E', text: '#C8B89A', label: 'Đen ấm', icon: '☕' },
 ];
 
-export default function ReadingSettings({ settings, onSettingsChange, isOpen, onClose }) {
+export default function ReadingSettings({ settings, onSettingsChange, isOpen, onClose, isOffline = false }) {
   const [localSettings, setLocalSettings] = useState(settings);
   const [saving, setSaving] = useState(false);
 
@@ -45,7 +45,16 @@ export default function ReadingSettings({ settings, onSettingsChange, isOpen, on
 
   const saveToServer = async () => {
     setSaving(true);
-    await api.saveSettings(localSettings);
+    if (isOffline) {
+      try {
+        const { saveOfflineSettings } = await import('@/lib/offlineStorage');
+        await saveOfflineSettings(localSettings);
+      } catch (e) {
+        console.error('Lỗi lưu offline:', e);
+      }
+    } else {
+      await api.saveSettings(localSettings);
+    }
     setSaving(false);
   };
 
@@ -179,4 +188,5 @@ export default function ReadingSettings({ settings, onSettingsChange, isOpen, on
       </div>
     </div>
   );
+
 }
