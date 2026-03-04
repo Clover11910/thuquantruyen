@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -16,7 +16,7 @@ import {
   getOfflineSettings
 } from '@/lib/offlineStorage';
 
-export default function OfflinePage() {
+function OfflinePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const readStoryId = searchParams.get('read');
@@ -333,6 +333,13 @@ export default function OfflinePage() {
         )}
       </main>
     </ProtectedRoute>
+  );
+}
+export default function OfflinePage() {
+  return (
+    <Suspense fallback={<LoadingSpinner text="Đang tải..." />}>
+      <OfflinePageContent />
+    </Suspense>
   );
 }
 
