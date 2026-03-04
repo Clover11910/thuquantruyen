@@ -253,6 +253,7 @@ export default function OfflinePage() {
             onSettingsChange={handleSettingsChange}
             isOpen={showSettings}
             onClose={() => setShowSettings(false)}
+            isOffline={true}
           />
         </div>
       </ProtectedRoute>
@@ -334,3 +335,4 @@ export default function OfflinePage() {
     </ProtectedRoute>
   );
 }
+
