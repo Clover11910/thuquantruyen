@@ -1,0 +1,153 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* === CHỐNG COPY & KIỂM TRA PHẦN TỬ === */
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Cho phép select ở admin input */
+input, textarea {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* === BASE STYLES === */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans-vn text-ink-800 bg-parchment-50;
+  }
+
+  ::selection {
+    background: transparent;
+  }
+
+  ::-moz-selection {
+    background: transparent;
+  }
+}
+
+/* === SCROLLBAR CUSTOM === */
+@layer utilities {
+  .scrollbar-romance::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-romance::-webkit-scrollbar-track {
+    background: rgba(255, 182, 193, 0.1);
+    border-radius: 10px;
+  }
+
+  .scrollbar-romance::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #FFB3C1, #FF6B85);
+    border-radius: 10px;
+  }
+
+  .scrollbar-romance::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #FF8FA3, #E84766);
+  }
+}
+
+/* === CÁNH HOA RƠI === */
+.petal {
+  position: fixed;
+  top: -10%;
+  z-index: 0;
+  pointer-events: none;
+  animation: petalFall linear infinite;
+  opacity: 0.4;
+}
+
+.petal::before {
+  content: '🌸';
+  font-size: 1.2rem;
+}
+
+.petal:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
+.petal:nth-child(2) { left: 25%; animation-duration: 10s; animation-delay: 2s; }
+.petal:nth-child(3) { left: 45%; animation-duration: 7s; animation-delay: 4s; }
+.petal:nth-child(4) { left: 65%; animation-duration: 9s; animation-delay: 1s; }
+.petal:nth-child(5) { left: 80%; animation-duration: 11s; animation-delay: 3s; }
+.petal:nth-child(6) { left: 90%; animation-duration: 8s; animation-delay: 5s; }
+
+/* === CHAPTER CONTENT === */
+.chapter-content {
+  text-align: justify;
+  text-indent: 2em;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.chapter-content p {
+  margin-bottom: 0.8em;
+}
+
+/* === GLASSMORPHISM === */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* === GRADIENT TEXT === */
+.gradient-text {
+  background: linear-gradient(135deg, #E84766, #FF6B85, #FFB3C1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* === LOADING ANIMATION === */
+.loading-heart {
+  display: inline-block;
+  animation: heartbeat 1.2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.1); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.2); }
+}
+
+/* === BOTTOM NAV SAFE AREA === */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+/* === RESPONSIVE READING === */
+@media (max-width: 640px) {
+  .chapter-content {
+    text-indent: 1.5em;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+}
+
+/* === PRINT PREVENTION === */
+@media print {
+  body {
+    display: none !important;
+  }
+}

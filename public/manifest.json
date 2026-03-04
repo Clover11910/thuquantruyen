@@ -1,0 +1,16 @@
+﻿{
+  "name": "Thư Viện Ngôn Tình",
+  "short_name": "NgônTình",
+  "description": "Đọc truyện ngôn tình online & offline",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF5F7",
+  "theme_color": "#E84766",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}
