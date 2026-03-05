@@ -1,4 +1,4 @@
-﻿const API_URL = process.env.NEXT_PUBLIC_GAS_URL;
+const API_URL = process.env.NEXT_PUBLIC_GAS_URL;
 
 class ApiClient {
   constructor() {
@@ -18,29 +18,56 @@ class ApiClient {
     if (token) body.token = token;
 
     try {
+      // Google Apps Script redirect khi deploy, nên dùng mode: 'no-cors' không được
+      // Phải dùng fetch bình thường và để nó tự follow redirect
       const response = await fetch(this.baseUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
         body: JSON.stringify(body),
+        redirect: 'follow',
       });
 
-      // GAS redirects, so we handle it
       const text = await response.text();
+
+      // Thử parse JSON
       try {
-        return JSON.parse(text);
-      } catch {
-        // Nếu GAS redirect, fetch lại
-        const redirectResponse = await fetch(response.url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(body),
-        });
-        const redirectText = await redirectResponse.text();
-        return JSON.parse(redirectText);
+        const json = JSON.parse(text);
+        return json;
+      } catch (parseError) {
+        console.error('Không parse được JSON:', text.substring(0, 200));
+        // Nếu bị redirect HTML, thử gọi lại URL cuối cùng
+        if (text.includes('<!DOCTYPE')) {
+          console.log('Bị redirect HTML, thử gọi lại...');
+          // Google Apps Script có thể trả về HTML redirect
+          // Thử dùng cách khác
+          return await this.requestViaGet(action, params);
+        }
+        return { success: false, error: 'Server trả về dữ liệu không hợp lệ' };
       }
     } catch (error) {
       console.error('API Error:', error);
-      return { success: false, error: 'Lỗi kết nối server' };
+      return { success: false, error: 'Lỗi kết nối server: ' + error.message };
+    }
+  }
+
+  // Fallback: dùng GET với query parameter
+  async requestViaGet(action, params = {}) {
+    const token = this.getToken();
+    const body = { action, ...params };
+    if (token) body.token = token;
+
+    try {
+      const url = this.baseUrl + '?data=' + encodeURIComponent(JSON.stringify(body));
+      const response = await fetch(url, {
+        method: 'GET',
+        redirect: 'follow',
+      });
+      const text = await response.text();
+      return JSON.parse(text);
+    } catch (error) {
+      return { success: false, error: 'Lỗi kết nối (fallback): ' + error.message };
     }
   }
 
@@ -51,8 +78,10 @@ class ApiClient {
 
   async logout() {
     const result = await this.request('logout');
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user_data');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user_data');
+    }
     return result;
   }
 
