@@ -168,7 +168,7 @@ export default function LibraryPage() {
                     return (
                       <button
                         key={story.id}
-                        onClick={() => router.push(`/offline?read=${story.id}`)}
+                        onClick={() => router.push(`/offline/${story.id}`)}
                         className="text-left group"
                       >
                         <div className="relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-romance-50 hover:border-romance-200 hover:-translate-y-1">
@@ -296,3 +296,4 @@ export default function LibraryPage() {
     </ProtectedRoute>
   );
 }
+
